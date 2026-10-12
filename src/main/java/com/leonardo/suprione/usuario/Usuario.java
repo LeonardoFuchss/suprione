@@ -1,9 +1,7 @@
 package com.leonardo.suprione.usuario;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.leonardo.suprione.usuario.perfil.Perfil;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -20,5 +18,7 @@ public class Usuario {
     private String email;
     private String senha;
     private boolean ativo;
-    private String perfil_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "perfil_id")
+    private Perfil perfil;
 }
