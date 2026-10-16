@@ -19,7 +19,7 @@ public class Perfil {
     private Long id;
     private String nome;
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "perfil_permissao", joinColumns = @JoinColumn(name = "perfil_id"))
+    @CollectionTable(name = "perfil_permissao", joinColumns = @JoinColumn(name = "perfilId"))
     @Enumerated(EnumType.STRING)
     @Column(name = "permissao")
     private Set<Permissao> permissoes = new HashSet<>();

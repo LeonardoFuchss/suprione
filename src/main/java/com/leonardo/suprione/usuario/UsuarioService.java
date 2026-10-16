@@ -6,6 +6,6 @@ public interface UsuarioService {
     UsuarioResponse criarUsuario(UsuarioRequest req);
     List<UsuarioResponse> buscarUsuarios();
     UsuarioResponse buscarUsuarioPeloId(Long id);
-    void atualizarUsuario(UsuarioRequest req, Long id);
+    void atualizarUsuario(AtualizarUsuarioRequest req, Long id);
     void desativarUsuarioPeloId(Long id);
 }

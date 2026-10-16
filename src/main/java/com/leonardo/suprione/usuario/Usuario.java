@@ -19,6 +19,12 @@ public class Usuario {
     private String senha;
     private boolean ativo;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "perfil_id")
+    @JoinColumn(name = "perfilId")
     private Perfil perfil;
+
+    public void atualizarUsuario(AtualizarUsuarioRequest req, Perfil perfil) {
+        this.setNome(req.nome());
+        this.setEmail(req.email());
+        this.setPerfil(perfil);
+    }
 }

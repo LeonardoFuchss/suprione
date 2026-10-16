@@ -19,30 +19,38 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public UsuarioResponse criarUsuario(UsuarioRequest req) {
-        Optional<Perfil> perfilEncontrado = Optional.of(perfilRepository.findById(req.perfil_id()).orElseThrow(() -> new RuntimeException("Perfil não encontrado.")));
-        Usuario usuario = mapper.toEntity(req, perfilEncontrado.get());
-        Optional<Usuario> usuarioEncontrado = Optional.of(repository.existsByEmail(usuario.getEmail()).orElseThrow(() -> new RuntimeException("Já existe um usuário para o e-mail informado.")));
-        Usuario usuarioCriado = repository.save(usuarioEncontrado.get());
+        Perfil perfilEncontrado = perfilRepository.findById(req.perfilId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+        Usuario usuario = mapper.toEntity(req, perfilEncontrado);
+        usuario.setAtivo(true);
+        if (repository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Já existe um usuário para o e-mail informado.");
+        }
+        Usuario usuarioCriado = repository.save(usuario);
         return mapper.toResponse(usuarioCriado);
     }
-
     @Override
     public List<UsuarioResponse> buscarUsuarios() {
-        return List.of();
-    }
+        List<Usuario> usuarios = repository.findAll();
+        return usuarios.stream()
+                .map(mapper::toResponse).toList();
 
+    }
     @Override
     public UsuarioResponse buscarUsuarioPeloId(Long id) {
-        return null;
+        Optional<Usuario> usuario = Optional.of(repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado.")));
+        return mapper.toResponse(usuario.get());
     }
 
     @Override
-    public void atualizarUsuario(UsuarioRequest req, Long id) {
-
+    public void atualizarUsuario(AtualizarUsuarioRequest req, Long id) {
+        Optional<Usuario> usuario = Optional.of(repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado.")));
+        Optional<Perfil> perfil = Optional.of(perfilRepository.findById(usuario.get().getPerfil().getId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado.")));
+        usuario.get().atualizarUsuario(req, perfil.get());
     }
-
     @Override
+    @Transactional
     public void desativarUsuarioPeloId(Long id) {
-
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        usuario.setAtivo(false);
     }
 }
