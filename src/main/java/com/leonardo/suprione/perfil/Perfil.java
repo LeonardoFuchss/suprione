@@ -1,4 +1,4 @@
-package com.leonardo.suprione.usuario.perfil;
+package com.leonardo.suprione.perfil;
 
 import com.leonardo.suprione.usuario.Permissao;
 import jakarta.persistence.*;
@@ -24,4 +24,9 @@ public class Perfil {
     @Column(name = "permissao")
     private Set<Permissao> permissoes = new HashSet<>();
     private boolean ativo;
+
+    public void atualizarPerfil(AtualizarPerfilRequest req) {
+        this.setNome(req.nome());
+        this.setPermissoes(req.permissoes());
+    }
 }

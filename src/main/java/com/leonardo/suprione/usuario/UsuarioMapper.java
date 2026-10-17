@@ -1,6 +1,6 @@
 package com.leonardo.suprione.usuario;
 
-import com.leonardo.suprione.usuario.perfil.Perfil;
+import com.leonardo.suprione.perfil.Perfil;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,7 +1,7 @@
 package com.leonardo.suprione.usuario;
 
-import com.leonardo.suprione.usuario.perfil.Perfil;
-import com.leonardo.suprione.usuario.perfil.PerfilRepository;
+import com.leonardo.suprione.perfil.Perfil;
+import com.leonardo.suprione.perfil.PerfilRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,15 +37,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
     @Override
     public UsuarioResponse buscarUsuarioPeloId(Long id) {
-        Optional<Usuario> usuario = Optional.of(repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado.")));
-        return mapper.toResponse(usuario.get());
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        return mapper.toResponse(usuario);
     }
 
     @Override
     public void atualizarUsuario(AtualizarUsuarioRequest req, Long id) {
-        Optional<Usuario> usuario = Optional.of(repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado.")));
-        Optional<Perfil> perfil = Optional.of(perfilRepository.findById(usuario.get().getPerfil().getId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado.")));
-        usuario.get().atualizarUsuario(req, perfil.get());
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        Perfil perfil = perfilRepository.findById(usuario.getPerfil().getId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+        usuario.atualizarUsuario(req, perfil);
     }
     @Override
     @Transactional

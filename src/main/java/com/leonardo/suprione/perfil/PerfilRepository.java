@@ -1,6 +1,7 @@
-package com.leonardo.suprione.usuario.perfil;
+package com.leonardo.suprione.perfil;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
+    boolean existsByNome(String nome);
 }
