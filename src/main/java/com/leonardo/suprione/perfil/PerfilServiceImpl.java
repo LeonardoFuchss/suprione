@@ -1,5 +1,7 @@
 package com.leonardo.suprione.perfil;
 
+import com.leonardo.suprione.exception.BusinessException;
+import com.leonardo.suprione.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ public class PerfilServiceImpl implements PerfilService{
     public PerfilResponse criarPerfil(PerfilRequest req) {
         boolean perfilExiste = repository.existsByNome(req.nome());
         if (perfilExiste) {
-            throw new RuntimeException("O perfil informado já existe.");
+            throw new BusinessException("O perfil informado já existe.");
         }
         Perfil perfilCriado = repository.save(mapper.toEntity(req));
         return mapper.toPerfilDto(perfilCriado);
@@ -51,6 +53,6 @@ public class PerfilServiceImpl implements PerfilService{
     }
 
     public Perfil buscarPerfil(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Perfil não encontrado."));
     }
 }

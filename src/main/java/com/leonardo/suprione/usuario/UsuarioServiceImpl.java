@@ -1,5 +1,7 @@
 package com.leonardo.suprione.usuario;
 
+import com.leonardo.suprione.exception.BusinessException;
+import com.leonardo.suprione.exception.ResourceNotFoundException;
 import com.leonardo.suprione.perfil.Perfil;
 import com.leonardo.suprione.perfil.PerfilRepository;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public UsuarioResponse criarUsuario(UsuarioRequest req) {
-        Perfil perfilEncontrado = perfilRepository.findById(req.perfilId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+        Perfil perfilEncontrado = perfilRepository.findById(req.perfilId()).orElseThrow(() -> new ResourceNotFoundException("Perfil não encontrado."));
         Usuario usuario = mapper.toEntity(req, perfilEncontrado);
         usuario.setAtivo(true);
         if (repository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("Já existe um usuário para o e-mail informado.");
+            throw new BusinessException("Já existe um usuário para o e-mail informado.");
         }
         Usuario usuarioCriado = repository.save(usuario);
         return mapper.toResponse(usuarioCriado);
@@ -37,20 +39,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
     @Override
     public UsuarioResponse buscarUsuarioPeloId(Long id) {
-        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
         return mapper.toResponse(usuario);
     }
 
     @Override
     public void atualizarUsuario(AtualizarUsuarioRequest req, Long id) {
-        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-        Perfil perfil = perfilRepository.findById(usuario.getPerfil().getId()).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+        Perfil perfil = perfilRepository.findById(usuario.getPerfil().getId()).orElseThrow(() -> new ResourceNotFoundException("Perfil não encontrado."));
         usuario.atualizarUsuario(req, perfil);
     }
     @Override
     @Transactional
     public void desativarUsuarioPeloId(Long id) {
-        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
         usuario.setAtivo(false);
     }
 }
