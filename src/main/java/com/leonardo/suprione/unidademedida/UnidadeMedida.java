@@ -18,4 +18,9 @@ public class UnidadeMedida {
     private Long id;
     private String nome;
     private boolean ativo;
+
+    public void atualizarUnidadeMedida(UnidadeMedidaRequest req) {
+        this.setNome(req.nome());
+        this.setAtivo(req.ativo());
+    }
 }
